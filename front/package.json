@@ -10,6 +10,7 @@
     "material-ui-pickers": "^2.2.1",
     "moment": "^2.24.0",
     "react": "^16.8.3",
+    "react-cookie": "^3.0.8",
     "react-dom": "^16.8.3",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.5"
@@ -28,5 +29,9 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "proxy": "http://localhost:9090",
+  "devDependencies": {
+    "babel-plugin-jsx-control-statements": "^4.0.0"
+  }
 }

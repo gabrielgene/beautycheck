@@ -50,6 +50,11 @@ const styles = theme => ({
     marginLeft: -12,
     marginRight: 20,
   },
+  loading: {
+    display: 'flex',
+    justifyContent: 'center',
+    paddingTop: theme.spacing.unit * 6,
+  },
 });
 
 export default withStyles(styles);

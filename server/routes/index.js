@@ -1,5 +1,8 @@
 const models = require('../models');
 const User = require('../models/user');
+const Salon = require('../models/salon');
+const Schedule = require('../models/schedule');
+const { salon } = require('../mock');
 
 module.exports = app => {
   const controller = require('../controller');
@@ -30,25 +33,33 @@ module.exports = app => {
     );
   });
 
-  app.get('/calendar/:user', async (req, res) => {
-    const { user } = req.params;
-    const result = await User.findOne({ user });
-    result
-      ? res.status(200).send(result)
-      : res.status(404).send('Data not found');
-  });
-
-  app.post('/auth', (req, res) => {
+  app.post('/auth/salon', async (req, res) => {
     const { user, pass } = req.body;
-    console.log('Cookies: ', req.cookies);
 
-    User.findOne({ user, pass }).then(r => {
+    Salon.findOne({ user, pass }).then(r => {
       if (r) {
-        console.log({ r });
-        res.cookie('auth', user, { maxAge: 900000 }).send('ok');
+        res.cookie('auth', r._id, { maxAge: 900000 }).send('ok');
       } else {
         res.status(401).send('User or password wrong');
       }
     });
+  });
+
+  app.post('/auth/user', (req, res) => {
+    const { user, pass } = req.body;
+
+    User.findOne({ user, pass }).then(r => {
+      if (r) {
+        res.cookie('auth', r._id, { maxAge: 900000 }).send('ok');
+      } else {
+        res.status(401).send('User or password wrong');
+      }
+    });
+  });
+
+  app.get('/schedule/salon', async (req, res) => {
+    const { auth } = req.cookies;
+    const result = await Schedule.find({ salonId: auth });
+    res.send(result);
   });
 };

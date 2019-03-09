@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 export default axios.create({
-  baseURL: 'http://localhost:9090',
+  baseURL: 'http://localhost:3000',
+  withCredentials: true,
 });
 
 // const services = ['Corte de Cabelo', 'Unha', 'Escova Progressiva', 'Prancha'];

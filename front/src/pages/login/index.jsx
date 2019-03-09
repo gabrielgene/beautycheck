@@ -36,11 +36,11 @@ const Login = ({ classes, history, salon }) => {
     setValues({ ...values, [name]: event.target.value });
   };
 
-  const handleSubmit = () => {
-    API.post('/auth', values).then(() =>
-      history.push(salon ? '/salao-agenda' : '/cliente-agenda'),
-    );
-  };
+  const handleClientSubmit = () =>
+    API.post('/auth/user', values).then(() => history.push('/cliente-agenda'));
+
+  const handleSalonSubmit = () =>
+    API.post('/auth/salon', values).then(() => history.push('/salao-agenda'));
 
   return (
     <div>
@@ -82,7 +82,7 @@ const Login = ({ classes, history, salon }) => {
           color="primary"
           size="large"
           className={classes.button}
-          onClick={handleSubmit}
+          onClick={salon ? handleSalonSubmit : handleClientSubmit}
         >
           Entrar
         </Button>

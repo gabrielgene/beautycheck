@@ -48,7 +48,7 @@ const App = () => (
         <Route path="/cliente-perfil" component={ClientProfile} />
         <Route path="/cliente-saloes" component={ClientMySalon} />
 
-        <Route exact path="/salao/:name" component={SalonFullProfile} />
+        <Route exact path="/salao/:id" component={SalonFullProfile} />
         <Route exact path="/solicitar-servico" component={ServiceRequest} />
         <Route exact path="/solicitar-agenda" component={CalendarRequest} />
 

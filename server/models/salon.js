@@ -8,10 +8,8 @@ const SalonSchema = mongoose.Schema({
   phone: String,
   picture: String,
   workingHours: Object,
-  myServices: [Object],
   breaks: [Object],
-
-  scheduleServices: [Object],
+  myServices: [Object],
 });
 
 module.exports = mongoose.model('Salon', SalonSchema);

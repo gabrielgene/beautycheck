@@ -19,7 +19,7 @@ const styles = theme => ({
 });
 
 const Navigation = ({ classes, page, history }) => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(null);
   React.useEffect(() => {
     setValue(page);
   }, []);

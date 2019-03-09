@@ -11,18 +11,31 @@ import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import DateIcon from '@material-ui/icons/DateRange';
 import SettingsIcon from '@material-ui/icons/Settings';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import { withCookies } from 'react-cookie';
+import useSalonData from '../../hooks/use-salon-data';
 
 import withStyles from './styles.js';
 import Info from './info';
 import Services from './services';
 
-const Profile = ({ classes, history, fullProfile }) => {
+const Profile = ({ classes, history, match, fullProfile, cookies }) => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => setValue(newValue);
-
   const handleClick = () => history.push('/solicitar-servico');
   const handleServiceClick = () => history.push('/solicitar-agenda');
+
+  const data = useSalonData(match.params.id || cookies.get('auth'));
+
+  const { salon, loading } = data;
+  if (loading) {
+    return (
+      <div className={classes.loading}>
+        <CircularProgress />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -39,7 +52,7 @@ const Profile = ({ classes, history, fullProfile }) => {
             </IconButton>
           )}
           <Typography variant="h6" color="inherit" className={classes.grow}>
-            Genê Barber Shop
+            {salon.name}
           </Typography>
           {!fullProfile && (
             <IconButton
@@ -56,8 +69,14 @@ const Profile = ({ classes, history, fullProfile }) => {
           <Tab label="Serviços" />
         </Tabs>
       </AppBar>
-      {value === 0 && <Info fullProfile={fullProfile} />}
-      {value === 1 && <Services handleClick={handleServiceClick} />}
+      {value === 0 && <Info fullProfile={fullProfile} salon={salon} />}
+      {value === 1 && (
+        <Services
+          handleClick={handleServiceClick}
+          fullProfile={fullProfile}
+          salon={salon}
+        />
+      )}
       <div className={fullProfile ? classes.fullProfileFab : classes.fab}>
         <Fab
           aria-label="Share"
@@ -75,4 +94,4 @@ const Profile = ({ classes, history, fullProfile }) => {
   );
 };
 
-export default withStyles(withRouter(Profile));
+export default withStyles(withRouter(withCookies(Profile)));

@@ -41,32 +41,15 @@ const Calendar = props => {
   const { classes, history, client } = props;
   const [values, setValues] = React.useState({ loading: true, calendar: [] });
   const { loading, calendar } = values;
-  const callApi = async () => {
-    const result = await API.get('/calendar/gene');
-    const { scheduleServices, _id } = result.data;
-    // .then(r =>
-    //   setValues({ loading: false, calendar: r.data.scheduleServices }),
 
-    // );
-    // const x = await API.put(`/user/${_id}`, {
-    //   scheduleServices: [
-    //     {
-    //       date: '03/04/2019',
-    //       service: 'Corte de Cabelo',
-    //       price: 30,
-    //       duration: '10:00 ~ 11: 00',
-    //     },
-    //     {
-    //       date: '03/04/2019',
-    //       service: 'Corte de Cabelo',
-    //       price: 30,
-    //       duration: '10:00 ~ 11: 00',
-    //     },
-    //   ],
-    // });
-    console.log(scheduleServices, _id);
+  const callApi = async () => {
+    const result = await API.get('/schedule/salon');
+    setValues({ loading: false, calendar: result.data });
   };
-  React.useEffect(() => callApi(), []);
+
+  React.useEffect(() => {
+    callApi();
+  }, []);
 
   if (loading) {
     return (
