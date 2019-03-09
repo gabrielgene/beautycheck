@@ -16,6 +16,7 @@ import ClientNavigation from './pages/client-navigation';
 import Profile from './pages/profile';
 import ServiceRequest from './pages/service-request';
 import CalendarRequest from './pages/calendar-request';
+import Settings from './pages/settings';
 
 const SalonLogin = () => <Login salon />;
 const SalonCalendar = () => <SalonNavigation page={0} />;
@@ -50,6 +51,8 @@ const App = () => (
         <Route exact path="/salao/:name" component={SalonFullProfile} />
         <Route exact path="/solicitar-servico" component={ServiceRequest} />
         <Route exact path="/solicitar-agenda" component={CalendarRequest} />
+
+        <Route exact path="/configuracoes" component={Settings} />
       </div>
     </Router>
   </MuiThemeProvider>

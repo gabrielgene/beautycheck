@@ -9,15 +9,21 @@ const styles = theme => ({
   root: {
     padding: theme.spacing.unit * 4,
   },
+  imgWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
   img: {
     width: theme.spacing.unit * 40,
+    height: theme.spacing.unit * 25,
   },
   button: {
     marginTop: theme.spacing.unit * 3,
   },
   title: {
     fontWeight: 500,
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing.unit * 3,
+    marginLeft: theme.spacing.unit * 2,
   },
   subtitle: {
     marginTop: theme.spacing.unit * 4,
@@ -27,7 +33,9 @@ const styles = theme => ({
 
 const Landing = ({ classes, history }) => (
   <div className={classes.root}>
-    <img className={classes.img} src={barberSVG} alt="baberimg" />
+    <div className={classes.imgWrapper}>
+      <img className={classes.img} src={barberSVG} alt="baberimg" />
+    </div>
     <Typography
       className={classes.title}
       variant="h5"
@@ -35,7 +43,7 @@ const Landing = ({ classes, history }) => (
       color="primary"
       align="center"
     >
-      GetBeauty
+      Beautycheck
     </Typography>
     <Button
       fullWidth

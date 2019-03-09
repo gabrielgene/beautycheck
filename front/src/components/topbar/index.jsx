@@ -6,6 +6,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 const styles = {
   root: {
@@ -20,7 +21,7 @@ const styles = {
   },
 };
 
-const Topbar = ({ classes, title, history, back }) => (
+const Topbar = ({ classes, title, history, back, settings }) => (
   <div className={classes.root}>
     <AppBar position="static">
       <Toolbar>
@@ -37,6 +38,15 @@ const Topbar = ({ classes, title, history, back }) => (
         <Typography variant="h6" color="inherit" className={classes.grow}>
           {title}
         </Typography>
+        {settings && (
+          <IconButton
+            color="inherit"
+            aria-label="Configuracoes"
+            onClick={() => history.push('/configuracoes')}
+          >
+            <SettingsIcon />
+          </IconButton>
+        )}
       </Toolbar>
     </AppBar>
   </div>

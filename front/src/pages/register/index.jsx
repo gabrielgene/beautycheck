@@ -7,7 +7,7 @@ import Topbar from '../../components/topbar';
 
 const styles = theme => ({
   root: {
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing.unit * 3,
   },
   img: {
     width: theme.spacing.unit * 40,

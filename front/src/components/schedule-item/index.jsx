@@ -15,6 +15,9 @@ const styles = theme => ({
   avatar: {
     backgroundColor: theme.palette.primary.main,
   },
+  settings: {
+    backgroundColor: theme.palette.secondary.main,
+  },
 });
 
 const ScheduleItem = ({
@@ -24,9 +27,13 @@ const ScheduleItem = ({
   handleClick,
   primary,
   secondary,
+  settings,
 }) => (
   <ListItem onClick={handleClick}>
-    <Avatar color="primary" className={classes.avatar}>
+    <Avatar
+      color="primary"
+      className={!!settings ? classes.settings : classes.avatar}
+    >
       {avatar}
     </Avatar>
     <ListItemText primary={primary} secondary={secondary} />

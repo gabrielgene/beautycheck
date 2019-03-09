@@ -10,6 +10,7 @@ import ReplyIcon from '@material-ui/icons/Reply';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import DateIcon from '@material-ui/icons/DateRange';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 import withStyles from './styles.js';
 import Info from './info';
@@ -40,6 +41,15 @@ const Profile = ({ classes, history, fullProfile }) => {
           <Typography variant="h6" color="inherit" className={classes.grow}>
             Genê Barber Shop
           </Typography>
+          {!fullProfile && (
+            <IconButton
+              color="inherit"
+              aria-label="Configuracoes"
+              onClick={() => history.push('/configuracoes')}
+            >
+              <SettingsIcon />
+            </IconButton>
+          )}
         </Toolbar>
         <Tabs variant="fullWidth" value={value} onChange={handleChange}>
           <Tab label="Informações" />

@@ -43,7 +43,7 @@ const Login = ({ classes, history, salon }) => (
           color="primary"
           align="center"
         >
-          GetBeauty
+          Beautycheck
         </Typography>
         <TextField
           id="login"

@@ -42,7 +42,7 @@ class Calendar extends React.Component {
 
     return (
       <div>
-        <Topbar title="Agenda" />
+        <Topbar title="Agenda" settings />
         <List className={classes.root} subheader={<li />}>
           {calendar.map(c => (
             <li key={c.date} className={classes.listSection}>

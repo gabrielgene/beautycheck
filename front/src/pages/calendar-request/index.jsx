@@ -5,11 +5,16 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import DateIcon from '@material-ui/icons/DateRange';
+import TimeIcon from '@material-ui/icons/AccessTime';
+import AddIcon from '@material-ui/icons/Add';
+import List from '@material-ui/core/List';
 import moment from 'moment';
 import 'moment/locale/pt';
 import MomentUtils from '@date-io/moment';
 import { withStyles } from '@material-ui/core';
 import { InlineDatePicker, MuiPickersUtilsProvider } from 'material-ui-pickers';
+
+import CardItem from '../../components/card-item';
 
 moment.locale('pt');
 
@@ -73,13 +78,31 @@ const CalendarRequest = props => {
         </MuiPickersUtilsProvider>
       </div>
       <div>
-        <h1>Teste</h1>
+        <List className={classes.list}>
+          <CardItem
+            primary="Horário Ocupado"
+            secondary="10:00 ~ 11:00"
+            avatar={<TimeIcon />}
+          />
+          <CardItem
+            settings
+            primary="Agendar nesse horário"
+            secondary="11:00 ~ 11:30"
+            avatar={<AddIcon />}
+            handleClick={() => history.push('/cliente-agenda')}
+          />
+          <CardItem
+            primary="Horário Ocupado"
+            secondary="13:00 ~ 14:00"
+            avatar={<TimeIcon />}
+          />
+        </List>
       </div>
     </div>
   );
 };
 
-const styles = {
+const styles = theme => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
@@ -94,6 +117,9 @@ const styles = {
     marginLeft: -12,
     marginRight: 20,
   },
-};
+  list: {
+    padding: theme.spacing.unit * 2,
+  },
+});
 
 export default withStyles(styles)(CalendarRequest);
