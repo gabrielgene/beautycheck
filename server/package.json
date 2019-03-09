@@ -1,17 +1,35 @@
 {
-  "name": "salon-back",
-  "version": "1.0.0",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "express": "^4.16.4",
+    "express-session": "^1.15.6",
+    "jsonwebtoken": "^8.4.0",
+    "mongoose": "^5.4.1",
+    "passport": "^0.4.0",
+    "lodash": "^4.17.11",
+    "passport-local": "^1.0.0"
+  },
+  "name": "beautycheck-server",
   "description": "",
+  "version": "1.0.0",
   "main": "index.js",
+  "devDependencies": {
+    "nodemon": "^1.18.9"
+  },
   "scripts": {
-    "test": "jest"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabrielgene/express-boilerplate.git"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "lodash": "^4.17.11"
+  "bugs": {
+    "url": "https://github.com/gabrielgene/express-boilerplate/issues"
   },
-  "devDependencies": {
-    "jest": "^24.1.0"
-  }
+  "homepage": "https://github.com/gabrielgene/express-boilerplate#readme"
 }
