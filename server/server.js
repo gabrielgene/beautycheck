@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+
 const config = require('./config');
 
 mongoose.Promise = global.Promise;
@@ -22,11 +25,9 @@ mongoose.set('debug', true);
 
 // create express app
 const app = express();
-
-// parse requests of content-type - application/x-www-form-urlencoded
+app.use(cors());
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// parse requests of content-type - application/json
 app.use(bodyParser.json());
 
 // define a simple route
@@ -39,6 +40,6 @@ app.get('/', (req, res) => {
 require('./routes')(app);
 
 // listen for requests
-app.listen(3000, () => {
-  console.log('Server is listening on port 3000');
+app.listen(9090, () => {
+  console.log('Server is listening on port 9090');
 });

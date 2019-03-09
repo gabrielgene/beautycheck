@@ -1,13 +1,13 @@
-const Document = require('./document');
-const Lead = require('./lead');
+const Salon = require('./salon');
+const User = require('./user');
 
 module.exports = [
   {
-    name: 'documents',
-    Model: Document,
+    name: 'salon',
+    Model: Salon,
   },
   {
-    name: 'leads',
-    Model: Lead,
+    name: 'user',
+    Model: User,
   },
 ];

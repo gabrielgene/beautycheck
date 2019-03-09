@@ -3,7 +3,7 @@ exports.create = (req, res, Model) => {
   // Validate request
   if (!req.body) {
     return res.status(400).send({
-      message: 'Content can not be empty'
+      message: 'Content can not be empty',
     });
   }
 
@@ -18,7 +18,7 @@ exports.create = (req, res, Model) => {
     })
     .catch(err => {
       res.status(500).send({
-        message: err.message || 'Some error occurred while creating the Note.'
+        message: err.message || 'Some error occurred while creating the Note.',
       });
     });
 };
@@ -26,12 +26,32 @@ exports.create = (req, res, Model) => {
 // Retrieve and return all models from the database.
 exports.findAll = (req, res, Model) => {
   Model.find()
-    .then(datas => {
-      res.send(datas);
+    .then(d => {
+      res.send(d);
     })
     .catch(err => {
       res.status(500).send({
-        message: err.message || 'Some error occurred while retrieving notes.'
+        message: err.message || 'Some error occurred while retrieving notes.',
+      });
+    });
+};
+
+// Retrieve and return all models that find in database.
+exports.findBy = (req, res, Model) => {
+  // Validate request
+  if (!req.body) {
+    return res.status(400).send({
+      message: 'Content can not be empty',
+    });
+  }
+
+  Model.find(req.body)
+    .then(d => {
+      res.send(d);
+    })
+    .catch(err => {
+      res.status(500).send({
+        message: err.message || 'Some error occurred while retrieving notes.',
       });
     });
 };
@@ -42,7 +62,7 @@ exports.findOne = (req, res, Model) => {
     .then(model => {
       if (!model) {
         return res.status(404).send({
-          message: 'Model not found with id ' + req.params.id
+          message: 'Model not found with id ' + req.params.id,
         });
       }
       res.send(model);
@@ -50,11 +70,11 @@ exports.findOne = (req, res, Model) => {
     .catch(err => {
       if (err.kind === 'ObjectId') {
         return res.status(404).send({
-          message: 'Model not found with id ' + req.params.id
+          message: 'Model not found with id ' + req.params.id,
         });
       }
       return res.status(500).send({
-        message: 'Error retrieving model with id ' + req.params.id
+        message: 'Error retrieving model with id ' + req.params.id,
       });
     });
 };
@@ -64,16 +84,16 @@ exports.update = (req, res, Model) => {
   // Validate Request
   if (!req.body) {
     return res.status(400).send({
-      message: 'Note content can not be empty'
+      message: 'Note content can not be empty',
     });
   }
 
   // Find note and update it with the request body
-  Model.findByIdAndUpdate(req.params.idj, req.body, { new: true })
+  Model.findByIdAndUpdate(req.params.id, req.body, { new: true })
     .then(data => {
       if (!data) {
         return res.status(404).send({
-          message: 'Model not found with id ' + req.params.id
+          message: 'Model not found with id ' + req.params.id,
         });
       }
       res.send(data);
@@ -81,11 +101,11 @@ exports.update = (req, res, Model) => {
     .catch(err => {
       if (err.kind === 'ObjectId') {
         return res.status(404).send({
-          message: 'Model not found with id ' + req.params.id
+          message: 'Model not found with id ' + req.params.id,
         });
       }
       return res.status(500).send({
-        message: 'Error updating model with id ' + req.params.id
+        message: 'Error updating model with id ' + req.params.id,
       });
     });
 };
@@ -96,7 +116,7 @@ exports.delete = (req, res, Model) => {
     .then(data => {
       if (!data) {
         return res.status(404).send({
-          message: 'Model not found with id ' + req.params.id
+          message: 'Model not found with id ' + req.params.id,
         });
       }
       res.send({ message: 'Model deleted successfully!' });
@@ -104,11 +124,11 @@ exports.delete = (req, res, Model) => {
     .catch(err => {
       if (err.kind === 'ObjectId' || err.name === 'NotFound') {
         return res.status(404).send({
-          message: 'Model not found with id ' + req.params.id
+          message: 'Model not found with id ' + req.params.id,
         });
       }
       return res.status(500).send({
-        message: 'Could not delete model with id ' + req.params.id
+        message: 'Could not delete model with id ' + req.params.id,
       });
     });
 };

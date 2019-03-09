@@ -1,3 +1,3 @@
 module.exports = {
-  url: 'mongodb://salao:salao!00@ds259802.mlab.com:59802/salao-back',
+  url: 'mongodb://beautycheck:beauty3532@ds117681.mlab.com:17681/beautycheck',
 };
