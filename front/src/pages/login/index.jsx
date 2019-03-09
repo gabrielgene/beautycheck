@@ -3,9 +3,9 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withRouter } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
 
+import API from '../../api.js';
 import Topbar from '../../components/topbar';
 
 const styles = theme => ({
@@ -24,18 +24,28 @@ const styles = theme => ({
   title: {
     fontWeight: 500,
   },
-  paper: {
-    paddingTop: theme.spacing.unit * 4,
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
-  },
 });
 
-const Login = ({ classes, history, salon }) => (
-  <div>
-    <Topbar title="Entrar agora" back />
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
+const Login = ({ classes, history, salon }) => {
+  const [values, setValues] = React.useState({
+    user: '',
+    pass: '',
+  });
+
+  const handleChange = name => event => {
+    setValues({ ...values, [name]: event.target.value });
+  };
+
+  const handleSubmit = () => {
+    API.post('/auth', values).then(() =>
+      history.push(salon ? '/salao-agenda' : '/cliente-agenda'),
+    );
+  };
+
+  return (
+    <div>
+      <Topbar title="Entrar agora" back />
+      <div className={classes.root}>
         <Typography
           className={classes.title}
           variant="h4"
@@ -46,25 +56,24 @@ const Login = ({ classes, history, salon }) => (
           Beautycheck
         </Typography>
         <TextField
-          id="login"
-          label="Login"
+          id="user"
+          label="Usuario"
           fullWidth
+          variant="outlined"
           className={classes.input}
-          placeholder="usuario"
-          InputLabelProps={{
-            shrink: true,
-          }}
+          value={values.user}
+          onChange={handleChange('user')}
           margin="normal"
         />
         <TextField
           id="pass"
           label="Senha"
           fullWidth
+          variant="outlined"
           className={classes.input}
-          placeholder="***********"
-          InputLabelProps={{
-            shrink: true,
-          }}
+          value={values.pass}
+          type="password"
+          onChange={handleChange('pass')}
           margin="normal"
         />
         <Button
@@ -73,15 +82,13 @@ const Login = ({ classes, history, salon }) => (
           color="primary"
           size="large"
           className={classes.button}
-          onClick={() =>
-            history.push(salon ? '/salao-agenda' : '/cliente-agenda')
-          }
+          onClick={handleSubmit}
         >
           Entrar
         </Button>
-      </Paper>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default withStyles(styles)(withRouter(Login));

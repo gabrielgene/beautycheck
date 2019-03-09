@@ -2,12 +2,14 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
 import List from '@material-ui/core/List';
+import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Divider from '@material-ui/core/Divider';
 
+import API from '../../api.js';
 import Topbar from '../../components/topbar';
 import ScheduleItem from '../../components/schedule-item';
-import { getCalendar } from '../../service';
 
 const styles = theme => ({
   root: {
@@ -24,27 +26,68 @@ const styles = theme => ({
     backgroundColor: 'inherit',
     padding: 0,
   },
+  empty: {
+    textAlign: 'center',
+    padding: theme.spacing.unit * 3,
+  },
+  loading: {
+    display: 'flex',
+    justifyContent: 'center',
+    paddingTop: theme.spacing.unit * 6,
+  },
 });
 
-class Calendar extends React.Component {
-  state = {
-    calendar: [],
+const Calendar = props => {
+  const { classes, history, client } = props;
+  const [values, setValues] = React.useState({ loading: true, calendar: [] });
+  const { loading, calendar } = values;
+  const callApi = async () => {
+    const result = await API.get('/calendar/gene');
+    const { scheduleServices, _id } = result.data;
+    // .then(r =>
+    //   setValues({ loading: false, calendar: r.data.scheduleServices }),
+
+    // );
+    // const x = await API.put(`/user/${_id}`, {
+    //   scheduleServices: [
+    //     {
+    //       date: '03/04/2019',
+    //       service: 'Corte de Cabelo',
+    //       price: 30,
+    //       duration: '10:00 ~ 11: 00',
+    //     },
+    //     {
+    //       date: '03/04/2019',
+    //       service: 'Corte de Cabelo',
+    //       price: 30,
+    //       duration: '10:00 ~ 11: 00',
+    //     },
+    //   ],
+    // });
+    console.log(scheduleServices, _id);
   };
+  React.useEffect(() => callApi(), []);
 
-  componentDidMount() {
-    // getCalendar().then(calendar => this.setState({ calendar, loading: false }));
-    this.setState({ calendar: getCalendar() });
-  }
-
-  render() {
-    const { classes, history } = this.props;
-    const { calendar } = this.state;
-
+  if (loading) {
     return (
       <div>
-        <Topbar title="Agenda" settings />
-        <List className={classes.root} subheader={<li />}>
-          {calendar.map(c => (
+        <Topbar title="Agenda" settings={!client} />
+        <div className={classes.loading}>
+          <CircularProgress />
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div>
+      <Topbar title="Agenda" settings={!client} />
+      <List className={classes.root} subheader={<li />}>
+        {calendar.length === 0 ? (
+          <Typography className={classes.empty} variant="h6" gutterBottom>
+            Você ainda não possui agendamentos
+          </Typography>
+        ) : (
+          calendar.map(c => (
             <li key={c.date} className={classes.listSection}>
               <ul className={classes.ul}>
                 <ListSubheader color="primary" style={{ textAlign: 'center' }}>
@@ -64,11 +107,11 @@ class Calendar extends React.Component {
                 ))}
               </ul>
             </li>
-          ))}
-        </List>
-      </div>
-    );
-  }
-}
+          ))
+        )}
+      </List>
+    </div>
+  );
+};
 
 export default withStyles(styles)(withRouter(Calendar));

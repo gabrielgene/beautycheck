@@ -26,7 +26,7 @@ const ClientLogin = () => <Login />;
 const ClientCalendar = () => <ClientNavigation page={0} />;
 const ClientProfile = () => <ClientNavigation page={1} />;
 const ClientMySalon = () => <ClientNavigation page={2} />;
-const ClientRegister = () => <Register back />;
+const ClientRegister = () => <Register />;
 
 const SalonFullProfile = () => <Profile fullProfile />;
 

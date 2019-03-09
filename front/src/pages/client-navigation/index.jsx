@@ -21,15 +21,15 @@ const styles = theme => ({
 });
 
 const Navigation = ({ classes, history, page }) => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = React.useState(null);
   React.useEffect(() => {
     setValue(page);
   }, []);
 
   return (
     <div>
-      {value === 0 && <Calendar />}
-      {value === 1 && <Profile />}
+      {value === 0 && <Calendar client />}
+      {value === 1 && <Profile edit />}
       {value === 2 && <MySalons />}
       <BottomNavigation
         value={value}
