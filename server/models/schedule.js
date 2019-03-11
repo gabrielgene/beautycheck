@@ -7,8 +7,8 @@ const ScheduleSchema = mongoose.Schema({
   phoneSalon: String,
   phoneClient: String,
   duration: Number,
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  salonId: { type: mongoose.Schema.Types.ObjectId, ref: 'Salon' },
+
+  user: String,
 });
 
 module.exports = mongoose.model('Schedule', ScheduleSchema);

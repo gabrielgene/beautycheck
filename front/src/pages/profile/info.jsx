@@ -10,7 +10,6 @@ import withStyles from './styles.js';
 import Hour from './hour';
 import CardItem from '../../components/card-item';
 import src from '../../assets/barber.jpeg';
-import useSalonData from '../../hooks/use-salon-data';
 
 const Info = ({ classes, salon }) => {
   return (

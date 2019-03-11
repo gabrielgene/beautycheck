@@ -17,13 +17,13 @@ const Settings = ({ classes, history }) => (
   <div>
     <Topbar title="Configurações" back />
     <List className={classes.root}>
+      <CardItem settings primary="Entrar em contato" avatar={<PhoneIcon />} />
       <CardItem
         primary="Sair"
         avatar={<ExitIcon />}
         settings
         handleClick={() => history.push('/')}
       />
-      <CardItem settings primary="Entrar em contato" avatar={<PhoneIcon />} />
     </List>
   </div>
 );

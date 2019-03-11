@@ -28,6 +28,11 @@ const Profile = ({ classes, history, match, fullProfile, cookies }) => {
 
   const data = useSalonData(match.params.id || cookies.get('auth'));
 
+  if (data.error) {
+    history.replace('/cliente-agenda');
+    return null;
+  }
+
   const { salon, loading } = data;
   if (loading) {
     return (

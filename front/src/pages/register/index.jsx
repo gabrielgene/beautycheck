@@ -3,6 +3,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
+import { withCookies } from 'react-cookie';
 
 import API from '../../api.js';
 import Topbar from '../../components/topbar';
@@ -25,16 +26,17 @@ const styles = theme => ({
   },
 });
 
-const Register = ({ classes, history, edit }) => {
+const Register = ({ classes, history, edit, cookies }) => {
   const [values, setValues] = React.useState({
     name: '',
     phone: '',
     user: '',
     pass: '',
+    change: false,
   });
 
   const handleChange = name => event => {
-    setValues({ ...values, [name]: event.target.value });
+    setValues({ ...values, [name]: event.target.value, change: true });
   };
 
   const handleSubmit = async () => {
@@ -44,9 +46,23 @@ const Register = ({ classes, history, edit }) => {
     }
   };
 
+  const handleEdit = async () => {
+    const id = cookies.get('auth');
+    await API.put(`/user/${id}`, values);
+    setValues({ ...values, change: false });
+  };
+
+  React.useEffect(() => {
+    const id = cookies.get('auth');
+    API.get(`/user/${id}`).then(u => {
+      const { name, phone, user } = u.data;
+      setValues({ ...values, name, phone, user });
+    });
+  }, []);
+
   return (
     <div>
-      <Topbar title="Criar conta" back={!edit} />
+      <Topbar title={edit ? 'Editar perfil' : 'Criar conta'} back={!edit} />
       <div className={classes.root}>
         <TextField
           id="name"
@@ -90,34 +106,37 @@ const Register = ({ classes, history, edit }) => {
           value={values.user}
           onChange={handleChange('user')}
         />
-        <TextField
-          id="pass"
-          label="Senha"
-          fullWidth
-          variant="outlined"
-          className={classes.input}
-          placeholder="***********"
-          InputLabelProps={{
-            shrink: true,
-          }}
-          margin="normal"
-          type="password"
-          value={values.pass}
-          onChange={handleChange('pass')}
-        />
+        {!edit && (
+          <TextField
+            id="pass"
+            label="Senha"
+            fullWidth
+            variant="outlined"
+            className={classes.input}
+            placeholder="***********"
+            InputLabelProps={{
+              shrink: true,
+            }}
+            margin="normal"
+            type="password"
+            value={values.pass}
+            onChange={handleChange('pass')}
+          />
+        )}
         <Button
           fullWidth
           variant="contained"
           color="primary"
           size="large"
+          disabled={edit && !values.change}
           className={classes.button}
-          onClick={handleSubmit}
+          onClick={edit ? handleEdit : handleSubmit}
         >
-          Registrar
+          {edit ? 'Salvar Alterações' : 'Registrar'}
         </Button>
       </div>
     </div>
   );
 };
 
-export default withStyles(styles)(withRouter(Register));
+export default withStyles(styles)(withRouter(withCookies(Register)));

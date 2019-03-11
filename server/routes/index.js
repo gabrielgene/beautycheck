@@ -38,7 +38,7 @@ module.exports = app => {
 
     Salon.findOne({ user, pass }).then(r => {
       if (r) {
-        res.cookie('auth', r._id, { maxAge: 900000 }).send('ok');
+        res.cookie('auth', r._id, { maxAge: 9000000000 }).send('ok');
       } else {
         res.status(401).send('User or password wrong');
       }
@@ -50,16 +50,16 @@ module.exports = app => {
 
     User.findOne({ user, pass }).then(r => {
       if (r) {
-        res.cookie('auth', r._id, { maxAge: 900000 }).send('ok');
+        res.cookie('auth', r._id, { maxAge: 9000000000 }).send('ok');
       } else {
         res.status(401).send('User or password wrong');
       }
     });
   });
 
-  app.get('/schedule/salon', async (req, res) => {
+  app.get('/schedule', async (req, res) => {
     const { auth } = req.cookies;
-    const result = await Schedule.find({ salonId: auth });
+    const result = await Schedule.find({ user: auth });
     res.send(result);
   });
 };
