@@ -1,14 +1,18 @@
 const mongoose = require('mongoose');
 
 const ScheduleSchema = mongoose.Schema({
-  name: String,
-  salon: String,
-  client: String,
+  scheduleName: String,
+  clientName: String,
+  salonName: String,
+
   phoneSalon: String,
   phoneClient: String,
+
+  time: Number,
   duration: Number,
 
-  user: String,
+  userId: String,
+  salonId: String,
 });
 
 module.exports = mongoose.model('Schedule', ScheduleSchema);
