@@ -1,134 +1,52 @@
-// Create and Save a new Model
-exports.create = (req, res, Model) => {
-  // Validate request
-  if (!req.body) {
-    return res.status(400).send({
-      message: 'Content can not be empty',
-    });
-  }
+const { validateRequest, errorHandler, dataNotFound } = require('./utils');
 
-  // Create a Model
+exports.create = (req, res, Model) => {
+  validateRequest(req, res);
+
   const model = new Model(req.body);
 
-  // Save Note in the database
   model
     .save()
     .then(data => {
       res.send(data);
     })
     .catch(err => {
-      res.status(500).send({
-        message: err.message || 'Some error occurred while creating the Note.',
-      });
+      errorHandler(err, res);
     });
 };
 
-// Retrieve and return all models from the database.
-exports.findAll = (req, res, Model) => {
-  Model.find()
+exports.find = (req, res, Model) => {
+  const { query, projection } = req.body;
+  Model.find(query, projection)
     .then(d => {
       res.send(d);
     })
     .catch(err => {
-      res.status(500).send({
-        message: err.message || 'Some error occurred while retrieving notes.',
-      });
+      errorHandler(err, res);
     });
 };
 
-// Retrieve and return all models that find in database.
-exports.findBy = (req, res, Model) => {
-  // Validate request
-  if (!req.body) {
-    return res.status(400).send({
-      message: 'Content can not be empty',
-    });
-  }
-
-  Model.find(req.body)
-    .then(d => {
-      res.send(d);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: err.message || 'Some error occurred while retrieving notes.',
-      });
-    });
-};
-
-// Find a single Model with a Id
-exports.findOne = (req, res, Model) => {
-  Model.findById(req.params.id)
-    .then(model => {
-      if (!model) {
-        return res.status(404).send({
-          message: 'Model not found with id ' + req.params.id,
-        });
-      }
-      res.send(model);
-    })
-    .catch(err => {
-      if (err.kind === 'ObjectId') {
-        return res.status(404).send({
-          message: 'Model not found with id ' + req.params.id,
-        });
-      }
-      return res.status(500).send({
-        message: 'Error retrieving model with id ' + req.params.id,
-      });
-    });
-};
-
-// Update a note identified by the noteId in the request
 exports.update = (req, res, Model) => {
-  // Validate Request
-  if (!req.body) {
-    return res.status(400).send({
-      message: 'Note content can not be empty',
-    });
-  }
+  validateRequest(req, res);
+  const { query, data } = req.body;
 
-  // Find note and update it with the request body
-  Model.findByIdAndUpdate(req.params.id, req.body, { new: true })
+  Model.findByOneAndUpdate(query, data, { new: true })
     .then(data => {
-      if (!data) {
-        return res.status(404).send({
-          message: 'Model not found with id ' + req.params.id,
-        });
-      }
+      dataNotFound(data, res);
       res.send(data);
     })
     .catch(err => {
-      if (err.kind === 'ObjectId') {
-        return res.status(404).send({
-          message: 'Model not found with id ' + req.params.id,
-        });
-      }
-      return res.status(500).send({
-        message: 'Error updating model with id ' + req.params.id,
-      });
+      errorHandler(err, res);
     });
 };
 
-// Delete a note with the specified noteId in the request
 exports.delete = (req, res, Model) => {
   Model.findByIdAndRemove(req.params.id)
     .then(data => {
-      if (!data) {
-        return res.status(404).send({
-          message: 'Model not found with id ' + req.params.id,
-        });
-      }
+      dataNotFound(data, res);
       res.send({ message: 'Model deleted successfully!' });
     })
     .catch(err => {
-      if (err.kind === 'ObjectId' || err.name === 'NotFound') {
-        return res.status(404).send({
-          message: 'Model not found with id ' + req.params.id,
-        });
-      }
-      return res.status(500).send({
-        message: 'Could not delete model with id ' + req.params.id,
-      });
+      errorHandler(err, res);
     });
 };
