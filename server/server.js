@@ -30,9 +30,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // define a simple route
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
   res.json({
-    message: 'Welcome to my server.',
+    routes: app._router.stack
+      .map(s => s.route)
+      .filter(r => r)
+      .map(r => ({ route: r.path, method: r.stack[0].method })),
   });
 });
 
