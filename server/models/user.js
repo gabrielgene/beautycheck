@@ -1,22 +1,10 @@
 const mongoose = require('mongoose');
 
 const UserSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  user: {
-    type: String,
-    required: true,
-  },
-  pass: {
-    type: String,
-    required: true,
-  },
-  phone: {
-    type: String,
-    required: true,
-  },
+  name: String,
+  user: String,
+  pass: String,
+  phone: String,
 
   mySalons: [Object],
 });
