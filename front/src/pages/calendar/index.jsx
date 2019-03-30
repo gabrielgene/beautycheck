@@ -8,12 +8,12 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import Divider from '@material-ui/core/Divider';
 
 import API from '../../api.js';
-import { getCalendar } from '../../api.js';
 import Topbar from '../../components/topbar';
 import ScheduleItem from '../../components/schedule-item';
 
 const styles = theme => ({
   root: {
+    marginTop: 8,
     width: '100%',
     backgroundColor: theme.palette.background.paper,
     position: 'relative',
@@ -44,9 +44,8 @@ const Calendar = props => {
   const { loading, calendar } = values;
 
   const callApi = async () => {
-    await API.get('/schedule');
-    const calendar = getCalendar();
-    setValues({ loading: false, calendar });
+    const { data } = await API.post('/find/schedules');
+    setValues({ loading: false, calendar: data });
   };
 
   React.useEffect(() => {

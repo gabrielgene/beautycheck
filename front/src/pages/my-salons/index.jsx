@@ -27,7 +27,7 @@ const styles = theme => ({
 });
 
 const MySalons = ({ classes, history, cookies }) => {
-  const { loading, client } = useClientData(cookies.get('auth'));
+  const { loading, client } = useClientData();
   const { mySalons } = client;
 
   if (loading) {

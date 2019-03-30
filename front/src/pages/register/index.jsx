@@ -40,24 +40,27 @@ const Register = ({ classes, history, edit, cookies }) => {
   };
 
   const handleSubmit = async () => {
-    const response = await API.post('/user', values);
+    const response = await API.post('/create/users', values);
     if (response) {
+      await API.post('/auth/user', { user: values.user, pass: values.pass });
       history.push('/cliente-agenda');
     }
   };
 
   const handleEdit = async () => {
     const id = cookies.get('auth');
-    await API.put(`/user/${id}`, values);
+    await API.put(`/update/users/${id}`, values);
     setValues({ ...values, change: false });
   };
 
   React.useEffect(() => {
-    const id = cookies.get('auth');
-    API.get(`/user/${id}`).then(u => {
-      const { name, phone, user } = u.data;
-      setValues({ ...values, name, phone, user });
-    });
+    if (edit) {
+      const id = cookies.get('auth');
+      API.post('/find/users', { query: { _id: id } }).then(u => {
+        const { name, phone, user } = u.data[0];
+        setValues({ ...values, name, phone, user });
+      });
+    }
   }, []);
 
   return (
