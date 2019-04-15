@@ -28,9 +28,9 @@ exports.find = (req, res, Model) => {
 
 exports.update = (req, res, Model) => {
   validateRequest(req, res);
-  const { query, data } = req.body;
+  const { id, data } = req.body;
 
-  Model.findByOneAndUpdate(query, data, { new: true })
+  Model.findByIdAndUpdate(id, data, { new: true })
     .then(data => {
       dataNotFound(data, res);
       res.send(data);

@@ -49,7 +49,8 @@ const Register = ({ classes, history, edit, cookies }) => {
 
   const handleEdit = async () => {
     const id = cookies.get('auth');
-    await API.put(`/update/users/${id}`, values);
+    const data = { id: id, data: values };
+    await API.put('/update/users', data);
     setValues({ ...values, change: false });
   };
 
@@ -57,8 +58,7 @@ const Register = ({ classes, history, edit, cookies }) => {
     if (edit) {
       const id = cookies.get('auth');
       API.post('/find/users', { query: { _id: id } }).then(u => {
-        const { name, phone, user } = u.data[0];
-        setValues({ ...values, name, phone, user });
+        setValues({ ...values, ...u.data[0] });
       });
     }
   }, []);
@@ -109,23 +109,21 @@ const Register = ({ classes, history, edit, cookies }) => {
           value={values.user}
           onChange={handleChange('user')}
         />
-        {!edit && (
-          <TextField
-            id="pass"
-            label="Senha"
-            fullWidth
-            variant="outlined"
-            className={classes.input}
-            placeholder="***********"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            margin="normal"
-            type="password"
-            value={values.pass}
-            onChange={handleChange('pass')}
-          />
-        )}
+        <TextField
+          id="pass"
+          label="Senha"
+          fullWidth
+          variant="outlined"
+          className={classes.input}
+          placeholder="***********"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          margin="normal"
+          type="password"
+          value={values.pass}
+          onChange={handleChange('pass')}
+        />
         <Button
           fullWidth
           variant="contained"

@@ -1,13 +1,16 @@
 import React from 'react';
 import List from '@material-ui/core/List';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { withRouter } from 'react-router-dom';
 
 import CardItem from '../../components/card-item';
 import withStyles from './styles.js';
 import { buildAvatar, buildTime } from '../../utils/string';
+import useSalonData from '../../hooks/use-salon-data';
 
-const Services = ({ classes, history, fullProfile, handleClick, salon }) => {
+const Services = ({ classes, fullProfile, handleClick, salon }) => {
   const { myServices } = salon;
+
   return (
     <div className={classes.list}>
       <List>

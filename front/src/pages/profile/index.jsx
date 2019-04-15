@@ -22,11 +22,13 @@ import Services from './services';
 const Profile = ({ classes, history, match, fullProfile, cookies }) => {
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (event, newValue) => setValue(newValue);
-  const handleClick = () => history.push('/solicitar-servico');
-  const handleServiceClick = () => history.push('/solicitar-agenda');
+  const salonId = match.params.id;
+  const handleChange = (_, newValue) => setValue(newValue);
+  const handleClick = () => history.push('/solicitar-servico', { salonId });
+  const handleServiceClick = service =>
+    history.push('/solicitar-agenda', { salonId, service });
 
-  const data = useSalonData(match.params.id || cookies.get('auth'));
+  const data = useSalonData(salonId || cookies.get('auth'));
 
   if (data.error) {
     history.replace('/cliente-agenda');

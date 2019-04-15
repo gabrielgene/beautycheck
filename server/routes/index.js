@@ -16,7 +16,7 @@ module.exports = app => {
       controller.find(req, res, Model),
     );
 
-    app.put(`/update/${Model.collection.collectionName}/:id`, (req, res) =>
+    app.put(`/update/${Model.collection.collectionName}`, (req, res) =>
       controller.update(req, res, Model),
     );
 

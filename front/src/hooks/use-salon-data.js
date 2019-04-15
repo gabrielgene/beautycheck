@@ -8,8 +8,8 @@ const useSalonData = id => {
   });
 
   React.useEffect(() => {
-    API.get(`/salon/${id}`)
-      .then(s => setData({ loading: false, salon: s.data }))
+    API.post(`find/salons`, { _id: id })
+      .then(s => setData({ loading: false, salon: s.data[0] }))
       .catch(() => setData({ error: true }));
   }, []);
   return data;
