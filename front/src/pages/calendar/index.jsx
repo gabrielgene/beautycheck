@@ -6,8 +6,10 @@ import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import Divider from '@material-ui/core/Divider';
+import { useCookies } from 'react-cookie';
+import { groupBy } from 'lodash';
 
-import API from '../../api.js';
+import useScheduleData from '../../hooks/use-schedule-data';
 import Topbar from '../../components/topbar';
 import ScheduleItem from '../../components/schedule-item';
 
@@ -40,18 +42,15 @@ const styles = theme => ({
 
 const Calendar = props => {
   const { classes, history, client } = props;
-  const [values, setValues] = React.useState({ loading: true, calendar: [] });
-  const { loading, calendar } = values;
+  const [cookies] = useCookies(['auth']);
 
-  const callApi = async () => {
-    const { data } = await API.post('/find/schedules');
-    setValues({ loading: false, calendar: data });
-  };
+  const data = useScheduleData({
+    [client ? 'userId' : 'salonId']: cookies.auth,
+    status: 'ACTIVE',
+  });
 
-  React.useEffect(() => {
-    callApi();
-  }, []);
-
+  const { loading, schedule } = data;
+  const groupSchedule = groupBy(schedule, 'date');
   if (loading) {
     return (
       <div>
@@ -66,29 +65,35 @@ const Calendar = props => {
     <div>
       <Topbar title="Agenda" settings={!client} />
       <List className={classes.root} subheader={<li />}>
-        {calendar.length === 0 ? (
+        {schedule.length === 0 ? (
           <Typography className={classes.empty} variant="h6" gutterBottom>
             Você ainda não possui agendamentos
           </Typography>
         ) : (
-          calendar.map(c => (
-            <li key={c.date} className={classes.listSection}>
+          Object.keys(groupSchedule).map(group => (
+            <li key={group} className={classes.listSection}>
               <ul className={classes.ul}>
                 <ListSubheader color="primary" style={{ textAlign: 'center' }}>
-                  {c.date}
+                  {group}
                 </ListSubheader>
                 <Divider />
-                {c.schedules.map(s => (
-                  <div key={s.id}>
-                    <ScheduleItem
-                      handleClick={() => history.push('/agendamento/123')}
-                      avatar={s.service.substring(0, 2).toUpperCase()}
-                      primary={`${s.service} - ${s.price}`}
-                      secondary={`${s.duration} - ${s.client}`}
-                    />
-                    <Divider />
-                  </div>
-                ))}
+                {groupSchedule[group]
+                  .sort((a, b) => a.time[0] - b.time[0])
+                  .map(g => (
+                    <div key={g._id}>
+                      <ScheduleItem
+                        handleClick={() =>
+                          history.push(`/agendamento/${g._id}`)
+                        }
+                        avatar={g.service.name.substring(0, 2).toUpperCase()}
+                        primary={`${g.service.name} - R$${g.service.price},00`}
+                        secondary={`${g.time[0]}:00 ~ ${g.time[1]}:00 - ${
+                          g.salonName
+                        }`}
+                      />
+                      <Divider />
+                    </div>
+                  ))}
               </ul>
             </li>
           ))

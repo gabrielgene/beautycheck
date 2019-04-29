@@ -1,8 +1,10 @@
+const { errorHandler } = require('../controller/utils');
 const models = require('../models');
 const User = require('../models/user');
 const Salon = require('../models/salon');
 const Schedule = require('../models/schedule');
-const { salon } = require('../mock');
+const findSpaces = require('../index');
+const mock = require('../mock');
 
 module.exports = app => {
   const controller = require('../controller');
@@ -25,7 +27,7 @@ module.exports = app => {
     );
   });
 
-  app.post('/auth/salon', async (req, res) => {
+  app.post('/auth/salon', (req, res) => {
     const { user, pass } = req.body;
 
     Salon.findOne({ user, pass }).then(r => {
@@ -47,5 +49,76 @@ module.exports = app => {
         res.status(401).send('User or password wrong');
       }
     });
+  });
+
+  app.post('/find-spaces', (req, res) => {
+    const { salon } = req.body;
+    const { myService } = req.body;
+    const salonId = salon._id;
+
+    Salon.findOne({ _id: salonId }).then(s => {
+      Schedule.find({ salonId, status: 'ACTIVE' }).then(schedules => {
+        const { workingHours, breaks } = s;
+        const workHours = workingHours.monday;
+        const services = schedules.map(s => s.time);
+
+        const hours = findSpaces(
+          workHours,
+          services,
+          breaks,
+          myService.duration,
+        );
+
+        res.send({ hours, services, breaks });
+      });
+    });
+  });
+
+  app.post('/create-schedule', (req, res) => {
+    const { date, status, time, salonId, userId, service } = req.body;
+
+    Salon.findOne({ _id: salonId }).then(s => {
+      const salonName = s.name;
+      const salonPhone = s.phone;
+
+      User.findOne({ _id: userId }).then(u => {
+        const clientName = u.name;
+        const clientPhone = u.phone;
+
+        const schedule = new Schedule({
+          status,
+          date,
+          time,
+          salonName,
+          salonPhone,
+          clientName,
+          clientPhone,
+          userId,
+          salonId,
+          service,
+        });
+
+        schedule
+          .save()
+          .then(data => {
+            res.send(data);
+          })
+          .catch(err => {
+            errorHandler(err, res);
+          });
+      });
+    });
+  });
+
+  app.get('/fake-salon', (req, res) => {
+    const fake = new Salon(mock.salon);
+    fake
+      .save()
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        errorHandler(err, res);
+      });
   });
 };

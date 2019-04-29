@@ -14,8 +14,8 @@ import SalonNavigation from './pages/salon-navigation';
 import CalendarItem from './pages/calendar-item';
 import ClientNavigation from './pages/client-navigation';
 import Profile from './pages/profile';
-import ServiceRequest from './pages/service-request';
-import CalendarRequest from './pages/calendar-request';
+import SelectService from './pages/select-service';
+import SelectDate from './pages/select-date';
 import Settings from './pages/settings';
 
 const SalonLogin = () => <Login salon />;
@@ -49,8 +49,8 @@ const App = () => (
         <Route path="/cliente-saloes" component={ClientMySalon} />
 
         <Route exact path="/salao/:id" component={SalonFullProfile} />
-        <Route exact path="/solicitar-servico" component={ServiceRequest} />
-        <Route exact path="/solicitar-agenda" component={CalendarRequest} />
+        <Route exact path="/selecionar-servico/:id" component={SelectService} />
+        <Route exact path="/selecionar-data/:id" component={SelectDate} />
 
         <Route exact path="/configuracoes" component={Settings} />
       </div>

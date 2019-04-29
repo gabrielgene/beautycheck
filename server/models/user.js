@@ -6,7 +6,7 @@ const UserSchema = mongoose.Schema({
   pass: String,
   phone: String,
 
-  mySalons: [Object],
+  mySalons: [String],
 });
 
 module.exports = mongoose.model('User', UserSchema);

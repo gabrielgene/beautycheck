@@ -3,6 +3,7 @@ import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
@@ -11,6 +12,8 @@ import PersonIcon from '@material-ui/icons/Person';
 import PhoneIcon from '@material-ui/icons/Phone';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import CardItem from '../../components/card-item';
+import useScheduleData from '../../hooks/use-schedule-data';
+import API from '../../api';
 
 const styles = theme => ({
   root: {
@@ -33,7 +36,23 @@ const styles = theme => ({
 });
 
 const CalendarItem = props => {
-  const { classes, history } = props;
+  const {
+    classes,
+    history,
+    match: { params },
+  } = props;
+  const { id } = params;
+
+  const data = useScheduleData({ _id: id, status: 'ACTIVE' });
+  const handleCancelCalendarItem = () => {
+    API.put('/update/schedules', {
+      id,
+      data: { status: 'CANCELED' },
+    }).then(() => history.push('/cliente-agenda'));
+  };
+
+  const { loading } = data;
+  const schedule = data.schedule[0];
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -51,24 +70,42 @@ const CalendarItem = props => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <List className={classes.list}>
-        <CardItem primary="Corte de Cabelo" avatar="CC" />
-        <CardItem primary="Cliente: Gabriel Genê" avatar={<PersonIcon />} />
-        <CardItem
-          primary="Duração: 10:00 ~ 11:00"
-          avatar={<QueryBuilderIcon />}
-        />
-        <CardItem primary="Telefone: (71) 99222-9059" avatar={<PhoneIcon />} />
-        <Button
-          fullWidth
-          variant="contained"
-          color="secondary"
-          className={classes.button}
-          onClick={() => history.goBack()}
+      {loading ? (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            paddingTop: 48,
+          }}
         >
-          Cancelar Agendamento
-        </Button>
-      </List>
+          <CircularProgress />
+        </div>
+      ) : (
+        <List className={classes.list}>
+          <CardItem primary={schedule.service.name} avatar="CC" />
+          <CardItem
+            primary={`Salão: ${schedule.salonName}`}
+            avatar={<PersonIcon />}
+          />
+          <CardItem
+            primary={`Duração: ${schedule.time[0]}:00 ~ ${schedule.time[1]}:00`}
+            avatar={<QueryBuilderIcon />}
+          />
+          <CardItem
+            primary={`Telefone: ${schedule.salonPhone}`}
+            avatar={<PhoneIcon />}
+          />
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            className={classes.button}
+            onClick={handleCancelCalendarItem}
+          >
+            Cancelar Agendamento
+          </Button>
+        </List>
+      )}
     </div>
   );
 };

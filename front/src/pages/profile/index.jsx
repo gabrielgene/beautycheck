@@ -12,23 +12,24 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import DateIcon from '@material-ui/icons/DateRange';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { withCookies } from 'react-cookie';
+import { useCookies } from 'react-cookie';
 import useSalonData from '../../hooks/use-salon-data';
 
 import withStyles from './styles.js';
 import Info from './info';
 import Services from './services';
 
-const Profile = ({ classes, history, match, fullProfile, cookies }) => {
+const Profile = ({ classes, history, match, fullProfile }) => {
   const [value, setValue] = React.useState(0);
 
   const salonId = match.params.id;
   const handleChange = (_, newValue) => setValue(newValue);
-  const handleClick = () => history.push('/solicitar-servico', { salonId });
+  const handleClick = () => history.push(`/selecionar-servico/${salonId}`);
   const handleServiceClick = service =>
-    history.push('/solicitar-agenda', { salonId, service });
+    history.push(`/selecionar-data/${salonId}`, { service });
 
-  const data = useSalonData(salonId || cookies.get('auth'));
+  const [cookies] = useCookies(['auth']);
+  const data = useSalonData(salonId || cookies.auth);
 
   if (data.error) {
     history.replace('/cliente-agenda');
@@ -101,4 +102,4 @@ const Profile = ({ classes, history, match, fullProfile, cookies }) => {
   );
 };
 
-export default withStyles(withRouter(withCookies(Profile)));
+export default withStyles(withRouter(Profile));

@@ -23,7 +23,6 @@ const styles = theme => ({
 const ScheduleItem = ({
   classes,
   avatar,
-  history,
   handleClick,
   primary,
   secondary,
