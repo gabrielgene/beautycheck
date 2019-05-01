@@ -12,7 +12,9 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import DateIcon from '@material-ui/icons/DateRange';
 import SettingsIcon from '@material-ui/icons/Settings';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Snackbar from '@material-ui/core/Snackbar';
 import { useCookies } from 'react-cookie';
+import copyClipboard from 'copy-to-clipboard';
 import useSalonData from '../../hooks/use-salon-data';
 
 import withStyles from './styles.js';
@@ -21,15 +23,47 @@ import Services from './services';
 
 const Profile = ({ classes, history, match, fullProfile }) => {
   const [value, setValue] = React.useState(0);
-
+  const [open, setOpen] = React.useState(false);
+  const [cookies] = useCookies(['auth', 'type']);
   const salonId = match.params.id;
-  const handleChange = (_, newValue) => setValue(newValue);
-  const handleClick = () => history.push(`/selecionar-servico/${salonId}`);
-  const handleServiceClick = service =>
-    history.push(`/selecionar-data/${salonId}`, { service });
-
-  const [cookies] = useCookies(['auth']);
   const data = useSalonData(salonId || cookies.auth);
+
+  const handleAuth = next => {
+    if (!cookies.auth) {
+      history.push('/cliente-entrar', next);
+    } else {
+      return true;
+    }
+  };
+
+  const handleChange = (_, newValue) => setValue(newValue);
+  const handleClick = () => {
+    const next = { path: `/selecionar-servico/${salonId}` };
+    if (handleAuth(next)) history.push(next.path);
+  };
+  const handleServiceClick = service => {
+    const next = { path: `/selecionar-data/${salonId}`, state: { service } };
+    const { path, state } = next;
+    if (handleAuth(next)) history.push(path, state);
+  };
+
+  const handleShare = () => {
+    if (copyClipboard(`http://localhost:3000/salao/${cookies.auth}`)) {
+      setOpen(true);
+    }
+    if (navigator.share) {
+      navigator
+        .share({
+          title: 'Web Fundamentals',
+          text: 'Check out Web Fundamentals — it rocks!',
+          url: 'https://developers.google.com/web',
+        })
+        .then(() => console.log('Successful share'))
+        .catch(error => console.log('Error sharing', error));
+    }
+  };
+
+  const handleClose = () => setOpen(false);
 
   if (data.error) {
     history.replace('/cliente-agenda');
@@ -88,16 +122,27 @@ const Profile = ({ classes, history, match, fullProfile }) => {
       <div className={fullProfile ? classes.fullProfileFab : classes.fab}>
         <Fab
           aria-label="Share"
+          variant="extended"
           color="secondary"
-          onClick={fullProfile && handleClick}
+          onClick={fullProfile ? handleClick : handleShare}
         >
           {fullProfile ? (
             <DateIcon className={classes.replyIcon} />
           ) : (
             <ReplyIcon className={classes.replyIcon} />
           )}
+          {fullProfile ? 'Agendar serviço' : 'Compartilhar perfil'}
         </Fab>
       </div>
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        open={open}
+        onClose={handleClose}
+        ContentProps={{
+          'aria-describedby': 'message-id',
+        }}
+        message={<span id="message-id">Link do seu perfil copiado.</span>}
+      />
     </div>
   );
 };

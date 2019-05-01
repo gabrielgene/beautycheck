@@ -11,7 +11,7 @@ import Landing from './pages/landing';
 import Login from './pages/login';
 import Register from './pages/register';
 import SalonNavigation from './pages/salon-navigation';
-import CalendarItem from './pages/calendar-item';
+import Schedule from './pages/schedule';
 import ClientNavigation from './pages/client-navigation';
 import Profile from './pages/profile';
 import SelectService from './pages/select-service';
@@ -21,12 +21,14 @@ import Settings from './pages/settings';
 const SalonLogin = () => <Login salon />;
 const SalonCalendar = () => <SalonNavigation page={0} />;
 const SalonProfile = () => <SalonNavigation page={1} />;
+const SalonSchedule = () => <Schedule />;
 
 const ClientLogin = () => <Login />;
 const ClientCalendar = () => <ClientNavigation page={0} />;
 const ClientProfile = () => <ClientNavigation page={1} />;
 const ClientMySalon = () => <ClientNavigation page={2} />;
 const ClientRegister = () => <Register />;
+const ClientSchedule = () => <Schedule isClient />;
 
 const SalonFullProfile = () => <Profile fullProfile />;
 
@@ -39,7 +41,7 @@ const App = () => (
         <Route path="/salao-entrar" component={SalonLogin} />
         <Route path="/salao-agenda" component={SalonCalendar} />
         <Route path="/salao-perfil" component={SalonProfile} />
-        <Route path="/agendamento/:id" component={CalendarItem} />
+        <Route path="/salao-agendamento/:id" component={SalonSchedule} />
 
         <Route path="/cliente-entrar" component={ClientLogin} />
         <Route path="/cliente-registrar" component={ClientRegister} />
@@ -47,6 +49,7 @@ const App = () => (
         <Route path="/cliente-agenda" component={ClientCalendar} />
         <Route path="/cliente-perfil" component={ClientProfile} />
         <Route path="/cliente-saloes" component={ClientMySalon} />
+        <Route path="/cliente-agendamento/:id" component={ClientSchedule} />
 
         <Route exact path="/salao/:id" component={SalonFullProfile} />
         <Route exact path="/selecionar-servico/:id" component={SelectService} />

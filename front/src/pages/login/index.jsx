@@ -27,6 +27,7 @@ const styles = theme => ({
 });
 
 const Login = ({ classes, history, salon }) => {
+  const { state } = history.location;
   const [values, setValues] = React.useState({
     user: '',
     pass: '',
@@ -37,7 +38,9 @@ const Login = ({ classes, history, salon }) => {
   };
 
   const handleClientSubmit = () =>
-    API.post('/auth/user', values).then(() => history.push('/cliente-agenda'));
+    API.post('/auth/user', values).then(() =>
+      history.push(state ? state.path : '/cliente-agenda', state.state),
+    );
 
   const handleSalonSubmit = () =>
     API.post('/auth/salon', values).then(() => history.push('/salao-agenda'));

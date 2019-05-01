@@ -1,5 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -35,11 +36,12 @@ const styles = theme => ({
   },
 });
 
-const CalendarItem = props => {
+const Schedule = props => {
   const {
     classes,
     history,
     match: { params },
+    isClient,
   } = props;
   const { id } = params;
 
@@ -53,6 +55,7 @@ const CalendarItem = props => {
 
   const { loading } = data;
   const schedule = data.schedule[0];
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -84,7 +87,11 @@ const CalendarItem = props => {
         <List className={classes.list}>
           <CardItem primary={schedule.service.name} avatar="CC" />
           <CardItem
-            primary={`Salão: ${schedule.salonName}`}
+            primary={
+              isClient
+                ? `Salão: ${schedule.salonName}`
+                : `Cliente: ${schedule.clientName}`
+            }
             avatar={<PersonIcon />}
           />
           <CardItem
@@ -92,7 +99,11 @@ const CalendarItem = props => {
             avatar={<QueryBuilderIcon />}
           />
           <CardItem
-            primary={`Telefone: ${schedule.salonPhone}`}
+            primary={
+              isClient
+                ? `Telefone: ${schedule.salonPhone}`
+                : `Telefone: ${schedule.clientPhone}`
+            }
             avatar={<PhoneIcon />}
           />
           <Button
@@ -110,4 +121,4 @@ const CalendarItem = props => {
   );
 };
 
-export default withStyles(styles)(CalendarItem);
+export default withStyles(styles)(withRouter(Schedule));

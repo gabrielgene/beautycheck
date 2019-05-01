@@ -27,18 +27,16 @@ const styles = theme => ({
   },
   fab: {
     position: 'fixed',
-    bottom: theme.spacing.unit * 10,
+    bottom: theme.spacing.unit * 8,
     display: 'flex',
-    justifyContent: 'flex-end',
-    right: theme.spacing.unit * 2,
+    justifyContent: 'center',
     width: '100%',
   },
   fullProfileFab: {
     position: 'fixed',
     bottom: theme.spacing.unit * 4,
     display: 'flex',
-    justifyContent: 'flex-end',
-    right: theme.spacing.unit * 2,
+    justifyContent: 'center',
     width: '100%',
   },
   img: {
@@ -54,6 +52,9 @@ const styles = theme => ({
     display: 'flex',
     justifyContent: 'center',
     paddingTop: theme.spacing.unit * 6,
+  },
+  replyIcon: {
+    marginRight: theme.spacing.unit,
   },
 });
 

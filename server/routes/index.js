@@ -32,7 +32,8 @@ module.exports = app => {
 
     Salon.findOne({ user, pass }).then(r => {
       if (r) {
-        res.cookie('auth', r._id, { maxAge: 9000000000 }).send('ok');
+        res.cookie('auth', r._id, { maxAge: 9000000000 });
+        res.cookie('type', 'salon', { maxAge: 9000000000 }).send('ok');
       } else {
         res.status(401).send('User or password wrong');
       }
@@ -44,7 +45,8 @@ module.exports = app => {
 
     User.findOne({ user, pass }).then(r => {
       if (r) {
-        res.cookie('auth', r._id, { maxAge: 9000000000 }).send('ok');
+        res.cookie('auth', r._id, { maxAge: 9000000000 });
+        res.cookie('type', 'client', { maxAge: 9000000000 }).send('ok');
       } else {
         res.status(401).send('User or password wrong');
       }
@@ -52,12 +54,11 @@ module.exports = app => {
   });
 
   app.post('/find-spaces', (req, res) => {
-    const { salon } = req.body;
-    const { myService } = req.body;
+    const { salon, myService, date } = req.body;
     const salonId = salon._id;
 
     Salon.findOne({ _id: salonId }).then(s => {
-      Schedule.find({ salonId, status: 'ACTIVE' }).then(schedules => {
+      Schedule.find({ salonId, status: 'ACTIVE', date }).then(schedules => {
         const { workingHours, breaks } = s;
         const workHours = workingHours.monday;
         const services = schedules.map(s => s.time);

@@ -47,6 +47,7 @@ const SelectDate = props => {
       state: { service },
     },
   } = props;
+  console.log(service);
 
   const salonId = match.params.id;
   const [data, setData] = React.useState({
@@ -54,10 +55,14 @@ const SelectDate = props => {
     value: {},
   });
 
+  const pickerRef = useRef(null);
+  const [selectedDate, handleDateChange] = useState(moment());
+
   const fetchData = () => {
     API.post('find-spaces', {
       salon: { _id: salonId },
       myService: service,
+      date: selectedDate.format('L'),
     }).then(s => setData({ value: s.data, loading: false }));
   };
 
@@ -72,9 +77,6 @@ const SelectDate = props => {
   };
 
   const { value, loading } = data;
-
-  const pickerRef = useRef(null);
-  const [selectedDate, handleDateChange] = useState(moment());
 
   const openPicker = useCallback(
     e => {
@@ -108,7 +110,7 @@ const SelectDate = props => {
   return (
     <div className={classes.container}>
       <div className={classes.root}>
-        <AppBar position="static">
+        <AppBar position="fixed">
           <Toolbar>
             <IconButton
               className={classes.menuButton}
@@ -168,7 +170,6 @@ const SelectDate = props => {
               .map(day => (
                 <CardItem
                   key={day.start}
-                  settings
                   settings={day.free}
                   primary={
                     day.free ? 'Agendar nesse horário' : 'Horário ocupado'
@@ -201,6 +202,7 @@ const styles = theme => ({
     marginRight: 20,
   },
   list: {
+    marginTop: theme.spacing.unit * 7,
     padding: theme.spacing.unit * 2,
   },
 });

@@ -40,21 +40,31 @@ const styles = theme => ({
   },
 });
 
-const Calendar = props => {
-  const { classes, history, client } = props;
-  const [cookies] = useCookies(['auth']);
+const buildAvatar = schedule =>
+  schedule.service.name.substring(0, 2).toUpperCase();
 
+const buildPrimary = schedule =>
+  `${schedule.service.name} - R$${schedule.service.price},00`;
+
+const buildSecondary = (schedule, isClient) =>
+  `${schedule.time[0]}:00 ~ ${schedule.time[1]}:00 - ${
+    isClient ? schedule.salonName : schedule.clientName
+  }`;
+
+const Calendar = ({ classes, history, isClientCalendar }) => {
+  const [cookies] = useCookies(['auth']);
   const data = useScheduleData({
-    [client ? 'userId' : 'salonId']: cookies.auth,
+    [isClientCalendar ? 'userId' : 'salonId']: cookies.auth,
     status: 'ACTIVE',
   });
 
   const { loading, schedule } = data;
-  const groupSchedule = groupBy(schedule, 'date');
+  const groupByDateSchedule = groupBy(schedule, 'date');
+
   if (loading) {
     return (
       <div>
-        <Topbar title="Agenda" settings={!client} />
+        <Topbar title="Agenda" settings={!isClientCalendar} />
         <div className={classes.loading}>
           <CircularProgress />
         </div>
@@ -63,33 +73,35 @@ const Calendar = props => {
   }
   return (
     <div>
-      <Topbar title="Agenda" settings={!client} />
+      <Topbar title="Agenda" settings={!isClientCalendar} />
       <List className={classes.root} subheader={<li />}>
         {schedule.length === 0 ? (
           <Typography className={classes.empty} variant="h6" gutterBottom>
             Você ainda não possui agendamentos
           </Typography>
         ) : (
-          Object.keys(groupSchedule).map(group => (
+          Object.keys(groupByDateSchedule).map(group => (
             <li key={group} className={classes.listSection}>
               <ul className={classes.ul}>
                 <ListSubheader color="primary" style={{ textAlign: 'center' }}>
                   {group}
                 </ListSubheader>
                 <Divider />
-                {groupSchedule[group]
+                {groupByDateSchedule[group]
                   .sort((a, b) => a.time[0] - b.time[0])
-                  .map(g => (
-                    <div key={g._id}>
+                  .map(schedule => (
+                    <div key={schedule._id}>
                       <ScheduleItem
                         handleClick={() =>
-                          history.push(`/agendamento/${g._id}`)
+                          history.push(
+                            isClientCalendar
+                              ? `/cliente-agendamento/${schedule._id}`
+                              : `/salao-agendamento/${schedule._id}`,
+                          )
                         }
-                        avatar={g.service.name.substring(0, 2).toUpperCase()}
-                        primary={`${g.service.name} - R$${g.service.price},00`}
-                        secondary={`${g.time[0]}:00 ~ ${g.time[1]}:00 - ${
-                          g.salonName
-                        }`}
+                        avatar={buildAvatar(schedule)}
+                        primary={buildPrimary(schedule)}
+                        secondary={buildSecondary(schedule)}
                       />
                       <Divider />
                     </div>

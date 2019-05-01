@@ -28,7 +28,7 @@ const Navigation = ({ classes, history, page }) => {
 
   return (
     <div>
-      {value === 0 && <Calendar client />}
+      {value === 0 && <Calendar isClientCalendar />}
       {value === 1 && <Profile edit />}
       {value === 2 && <MySalons />}
       <BottomNavigation
