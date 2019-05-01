@@ -16,6 +16,7 @@ import { useCookies } from 'react-cookie';
 import 'moment/locale/pt';
 
 import CardItem from '../../components/card-item';
+import AlertDialog from '../../components/confirm';
 import API from '../../api';
 
 moment.locale('pt');
@@ -47,7 +48,7 @@ const SelectDate = props => {
       state: { service },
     },
   } = props;
-  console.log(service);
+  const [dialog, setDialog] = React.useState(null);
 
   const salonId = match.params.id;
   const [data, setData] = React.useState({
@@ -70,10 +71,13 @@ const SelectDate = props => {
     fetchData();
   }, []);
 
+  React.useEffect(() => {
+    fetchData();
+  }, [selectedDate]);
+
   const handleChange = e => {
     setData({ value: {}, loading: true });
     handleDateChange(e);
-    fetchData();
   };
 
   const { value, loading } = data;
@@ -90,13 +94,17 @@ const SelectDate = props => {
   const [cookies] = useCookies(['auth']);
 
   const handleSchedule = value => {
+    setDialog(value);
+  };
+
+  const handleConfirm = () => {
     API.post('create-schedule', {
       status: 'ACTIVE',
-      time: [value.start, value.end],
+      time: [dialog.start, dialog.end],
       salonId,
       userId: cookies.auth,
       service,
-      date: new Intl.DateTimeFormat('pt-BR').format(new Date()),
+      date: selectedDate.format('L'),
     }).then(() => history.push('/cliente-agenda'));
   };
 
@@ -126,7 +134,7 @@ const SelectDate = props => {
               onClick={openPicker}
               className={classes.grow}
             >
-              {moment(selectedDate).format('LL')}
+              {selectedDate.format('LL')}
             </Typography>
             <IconButton onClick={openPicker} color="inherit">
               <DateIcon />
@@ -143,7 +151,7 @@ const SelectDate = props => {
         >
           <InlineDatePicker
             clearable
-            label="Open me from button"
+            label="Abrir Calendario"
             format="LL"
             value={selectedDate}
             onChange={handleChange}
@@ -182,6 +190,11 @@ const SelectDate = props => {
           </List>
         )}
       </div>
+      <AlertDialog
+        day={dialog}
+        handleClose={() => setDialog(null)}
+        handleConfirm={handleConfirm}
+      />
     </div>
   );
 };

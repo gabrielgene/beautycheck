@@ -85,10 +85,15 @@ module.exports = app => {
       User.findOne({ _id: userId }).then(u => {
         const clientName = u.name;
         const clientPhone = u.phone;
+        const scheduleDate = new Date();
+        const createdAt = new Date();
+        scheduleDate.setHours(0, 0, 0, 0);
 
         const schedule = new Schedule({
           status,
           date,
+          scheduleDate,
+          createdAt,
           time,
           salonName,
           salonPhone,
