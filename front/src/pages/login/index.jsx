@@ -39,7 +39,10 @@ const Login = ({ classes, history, salon }) => {
 
   const handleClientSubmit = () =>
     API.post('/auth/user', values).then(() =>
-      history.push(state ? state.path : '/cliente-agenda', state.state),
+      history.push(
+        state ? state.path : '/cliente-agenda',
+        state && state.state,
+      ),
     );
 
   const handleSalonSubmit = () =>
