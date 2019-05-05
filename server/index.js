@@ -28,6 +28,7 @@ const app = express();
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors());
 
 // define a simple route
 app.get('/', (_, res) => {
@@ -42,6 +43,6 @@ app.get('/', (_, res) => {
 require('./routes')(app);
 
 // listen for requests
-app.listen(9090, () => {
+app.listen(process.env.PORT || 9090, () => {
   console.log('Server is listening on port 9090');
 });
