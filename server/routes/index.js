@@ -3,7 +3,7 @@ const models = require('../models');
 const User = require('../models/user');
 const Salon = require('../models/salon');
 const Schedule = require('../models/schedule');
-const findSpaces = require('../index');
+const findSpaces = require('../find');
 const mock = require('../mock');
 
 module.exports = app => {

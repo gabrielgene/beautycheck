@@ -1,4 +1,4 @@
-const findSpaces = require('./');
+const findSpaces = require('./find');
 
 test('should find spaces', () => {
   const workHour = [8, 21];

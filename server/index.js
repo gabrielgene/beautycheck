@@ -1,31 +1,47 @@
-const _ = require('lodash');
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
-function getRange(array) {
-  const arrayRange = [];
-  array.forEach(b => {
-    const x = _.range(b[0], b[1], 0.5);
-    x.forEach(x => arrayRange.push(x));
+const config = require('./config');
+
+mongoose.Promise = global.Promise;
+
+// Connecting to the database
+mongoose
+  .connect(config.url, {
+    useNewUrlParser: true,
+  })
+  .then(() => {
+    console.log('Successfully connected to the database');
+  })
+  .catch(err => {
+    console.log('Could not connect to the database. Exiting now...', err);
+    process.exit();
   });
-  return arrayRange;
-}
 
-const findSpaces = (workHour, services, breaks, myService) => {
-  const hours = _.range(workHour[0], workHour[1], 0.5);
-  const servicesRange = getRange(services);
-  const breaksRange = getRange(breaks);
-  const hoursAvailable = _.difference(hours, [
-    ...servicesRange,
-    ...breaksRange,
-  ]);
-  const spaces = [];
-  hoursAvailable.forEach((h, idx, array) => {
-    const time = _.range(h, h + myService, 0.5);
-    const diff = _.difference(time, array);
-    if (diff.length === 0) {
-      spaces.push([h, h + myService]);
-    }
+mongoose.set('debug', true);
+
+// create express app
+const app = express();
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// define a simple route
+app.get('/', (_, res) => {
+  res.json({
+    routes: app._router.stack
+      .map(s => s.route)
+      .filter(r => r)
+      .map(r => ({ route: r.path, method: r.stack[0].method })),
   });
-  return spaces;
-};
+});
 
-module.exports = findSpaces;
+require('./routes')(app);
+
+// listen for requests
+app.listen(9090, () => {
+  console.log('Server is listening on port 9090');
+});
