@@ -27,6 +27,10 @@ module.exports = app => {
     );
   });
 
+  app.get('/salons', (req, res) => {
+    Salon.find().then(r => res.send(r));
+  });
+
   app.post('/auth/salon', (req, res) => {
     const { user, pass } = req.body;
 
