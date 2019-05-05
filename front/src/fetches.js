@@ -12,7 +12,7 @@ const createErrorHandler = defaultValue => res => {
 
 export const postRequest = (url, data = {}) => {
   return fetch(url, {
-    credentials: 'same-origin',
+    // credentials: 'same-origin',
     mode: 'cors',
     method: 'post',
     headers: {
@@ -22,12 +22,12 @@ export const postRequest = (url, data = {}) => {
     body: JSON.stringify(data),
   })
     .then(handleHttpStatus)
-    .catch(createErrorHandler({}));
+    .catch((e, x) => (console.log(e, x), createErrorHandler({})(e)));
 };
 
 export const putRequest = (url, data = {}) => {
   return fetch(url, {
-    credentials: 'same-origin',
+    // credentials: 'same-origin',
     mode: 'cors',
     method: 'put',
     headers: {

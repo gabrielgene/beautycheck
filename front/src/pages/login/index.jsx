@@ -38,12 +38,13 @@ const Login = ({ classes, history, salon }) => {
   };
 
   const handleClientSubmit = () =>
-    postRequest('/auth/user', values).then(() =>
-      history.push(
-        state ? state.path : '/cliente-agenda',
-        state && state.state,
-      ),
-    );
+    postRequest('/auth/user', values).then(data => {
+      console.log(data);
+      // history.push(
+      //   state ? state.path : '/cliente-agenda',
+      //   state && state.state,
+      // ),
+    });
 
   const handleSalonSubmit = () =>
     postRequest('/auth/salon', values).then(() =>
