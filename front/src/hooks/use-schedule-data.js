@@ -1,5 +1,5 @@
 import React from 'react';
-import API from '../api';
+import { postRequest } from '../fetches';
 
 const useScheduleData = query => {
   const [data, setData] = React.useState({
@@ -9,13 +9,13 @@ const useScheduleData = query => {
 
   const callApi = async () => {
     if (query) {
-      const data = await API.post('/find/schedules', {
+      const data = await postRequest('/find/schedules', {
         query,
       });
-      setData({ loading: false, schedule: data.data });
+      setData({ loading: false, schedule: data });
     } else {
-      const data = await API.post('/find/schedules');
-      setData({ loading: false, schedule: data.data });
+      const data = await postRequest('/find/schedules');
+      setData({ loading: false, schedule: data });
     }
   };
 

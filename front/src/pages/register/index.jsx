@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 import { withCookies } from 'react-cookie';
 
 import API from '../../api.js';
+import { postRequest } from '../../fetches';
 import Topbar from '../../components/topbar';
 
 const styles = theme => ({
@@ -26,7 +27,7 @@ const styles = theme => ({
   },
 });
 
-const Register = ({ classes, history, edit, cookies }) => {
+const Register = ({ classes, edit, history, cookies }) => {
   const [values, setValues] = React.useState({
     name: '',
     phone: '',
@@ -40,9 +41,12 @@ const Register = ({ classes, history, edit, cookies }) => {
   };
 
   const handleSubmit = async () => {
-    const response = await API.post('/create/users', values);
+    const response = await postRequest('/create/users/', values);
     if (response) {
-      await API.post('/auth/user', { user: values.user, pass: values.pass });
+      await postRequest('/auth/user', {
+        user: values.user,
+        pass: values.pass,
+      });
       history.push('/cliente-agenda');
     }
   };
@@ -57,8 +61,8 @@ const Register = ({ classes, history, edit, cookies }) => {
   React.useEffect(() => {
     if (edit) {
       const id = cookies.get('auth');
-      API.post('/find/users', { query: { _id: id } }).then(u => {
-        setValues({ ...values, ...u.data[0] });
+      postRequest('/find/users', { query: { _id: id } }).then(u => {
+        setValues({ ...values, ...u[0] });
       });
     }
   }, []);

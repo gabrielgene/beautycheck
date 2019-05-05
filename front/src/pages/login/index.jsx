@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
-import API from '../../api.js';
+import { postRequest } from '../../fetches';
 import Topbar from '../../components/topbar';
 
 const styles = theme => ({
@@ -38,7 +38,7 @@ const Login = ({ classes, history, salon }) => {
   };
 
   const handleClientSubmit = () =>
-    API.post('/auth/user', values).then(() =>
+    postRequest('/auth/user', values).then(() =>
       history.push(
         state ? state.path : '/cliente-agenda',
         state && state.state,
@@ -46,7 +46,9 @@ const Login = ({ classes, history, salon }) => {
     );
 
   const handleSalonSubmit = () =>
-    API.post('/auth/salon', values).then(() => history.push('/salao-agenda'));
+    postRequest('/auth/salon', values).then(() =>
+      history.push('/salao-agenda'),
+    );
 
   return (
     <div>

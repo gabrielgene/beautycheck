@@ -12,6 +12,7 @@ import { groupBy } from 'lodash';
 import useScheduleData from '../../hooks/use-schedule-data';
 import Topbar from '../../components/topbar';
 import ScheduleItem from '../../components/schedule-item';
+import { buildTime } from '../../utils/string';
 
 const styles = theme => ({
   root: {
@@ -47,7 +48,7 @@ const buildPrimary = schedule =>
   `${schedule.service.name} - R$${schedule.service.price},00`;
 
 const buildSecondary = (schedule, isClient) =>
-  `${schedule.time[0]}:00 ~ ${schedule.time[1]}:00 - ${
+  `${buildTime(schedule.time[0])} ~ ${buildTime(schedule.time[1])} - ${
     isClient ? schedule.salonName : schedule.clientName
   }`;
 
@@ -80,35 +81,41 @@ const Calendar = ({ classes, history, isClientCalendar }) => {
             Você ainda não possui agendamentos
           </Typography>
         ) : (
-          Object.keys(groupByDateSchedule).map(group => (
-            <li key={group} className={classes.listSection}>
-              <ul className={classes.ul}>
-                <ListSubheader color="primary" style={{ textAlign: 'center' }}>
-                  {group}
-                </ListSubheader>
-                <Divider />
-                {groupByDateSchedule[group]
-                  .sort((a, b) => a.time[0] - b.time[0])
-                  .map(schedule => (
-                    <div key={schedule._id}>
-                      <ScheduleItem
-                        handleClick={() =>
-                          history.push(
-                            isClientCalendar
-                              ? `/cliente-agendamento/${schedule._id}`
-                              : `/salao-agendamento/${schedule._id}`,
-                          )
-                        }
-                        avatar={buildAvatar(schedule)}
-                        primary={buildPrimary(schedule)}
-                        secondary={buildSecondary(schedule)}
-                      />
-                      <Divider />
-                    </div>
-                  ))}
-              </ul>
-            </li>
-          ))
+          Object.keys(groupByDateSchedule)
+            .sort()
+            .reverse()
+            .map(group => (
+              <li key={group} className={classes.listSection}>
+                <ul className={classes.ul}>
+                  <ListSubheader
+                    color="primary"
+                    style={{ textAlign: 'center' }}
+                  >
+                    {group}
+                  </ListSubheader>
+                  <Divider />
+                  {groupByDateSchedule[group]
+                    .sort((a, b) => a.time[0] - b.time[0])
+                    .map(schedule => (
+                      <div key={schedule._id}>
+                        <ScheduleItem
+                          handleClick={() =>
+                            history.push(
+                              isClientCalendar
+                                ? `/cliente-agendamento/${schedule._id}`
+                                : `/salao-agendamento/${schedule._id}`,
+                            )
+                          }
+                          avatar={buildAvatar(schedule)}
+                          primary={buildPrimary(schedule)}
+                          secondary={buildSecondary(schedule)}
+                        />
+                        <Divider />
+                      </div>
+                    ))}
+                </ul>
+              </li>
+            ))
         )}
       </List>
     </div>

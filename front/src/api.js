@@ -1,8 +1,13 @@
 import axios from 'axios';
 
 export default axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: 'https://beautycheck-server.herokuapp.com',
   withCredentials: true,
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
 });
 
 const services = ['Corte de Cabelo', 'Unha', 'Escova Progressiva', 'Prancha'];

@@ -14,7 +14,8 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
 import CardItem from '../../components/card-item';
 import useScheduleData from '../../hooks/use-schedule-data';
-import API from '../../api';
+import { buildTime } from '../../utils/string';
+import { putRequest } from '../../fetches';
 
 const styles = theme => ({
   root: {
@@ -47,7 +48,7 @@ const Schedule = props => {
 
   const data = useScheduleData({ _id: id, status: 'ACTIVE' });
   const handleCancelCalendarItem = () => {
-    API.put('/update/schedules', {
+    putRequest('/update/schedules', {
       id,
       data: { status: 'CANCELED' },
     }).then(() => history.push('/cliente-agenda'));
@@ -95,7 +96,9 @@ const Schedule = props => {
             avatar={<PersonIcon />}
           />
           <CardItem
-            primary={`Duração: ${schedule.time[0]}:00 ~ ${schedule.time[1]}:00`}
+            primary={`Duração: ${buildTime(schedule.time[0])} ~ ${buildTime(
+              schedule.time[1],
+            )}`}
             avatar={<QueryBuilderIcon />}
           />
           <CardItem

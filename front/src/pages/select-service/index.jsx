@@ -13,7 +13,20 @@ const SelectService = ({ history, match }) => {
 
   const { salon, loading } = data;
   if (loading) {
-    return <CircularProgress />;
+    return (
+      <div>
+        <Topbar title="Escolha o serviço" back />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            paddingTop: 48,
+          }}
+        >
+          <CircularProgress />
+        </div>
+      </div>
+    );
   }
 
   return (

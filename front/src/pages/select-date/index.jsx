@@ -17,7 +17,7 @@ import 'moment/locale/pt';
 
 import CardItem from '../../components/card-item';
 import AlertDialog from '../../components/confirm';
-import API from '../../api';
+import { postRequest } from '../../fetches';
 
 moment.locale('pt');
 
@@ -60,11 +60,11 @@ const SelectDate = props => {
   const [selectedDate, handleDateChange] = useState(moment());
 
   const fetchData = () => {
-    API.post('find-spaces', {
+    postRequest('/find-spaces', {
       salon: { _id: salonId },
       myService: service,
       date: selectedDate.format('L'),
-    }).then(s => setData({ value: s.data, loading: false }));
+    }).then(s => setData({ value: s, loading: false }));
   };
 
   React.useEffect(() => {
@@ -98,7 +98,7 @@ const SelectDate = props => {
   };
 
   const handleConfirm = () => {
-    API.post('create-schedule', {
+    postRequest('/create-schedule', {
       status: 'ACTIVE',
       time: [dialog.start, dialog.end],
       salonId,
@@ -166,7 +166,7 @@ const SelectDate = props => {
             style={{
               display: 'flex',
               justifyContent: 'center',
-              paddingTop: 48,
+              paddingTop: 60,
             }}
           >
             <CircularProgress />
